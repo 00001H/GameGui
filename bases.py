@@ -1,5 +1,5 @@
 """Defines abstract classes."""
-from .disp.winmgr import place
+from .disp import winmgr
 from ._utils import blank_of_size
 from abc import *
 from pygame import Surface
@@ -31,7 +31,7 @@ not."""
     def unfocusable(self):
         return False
     def place_at(self,pos,displaysurface):
-        place(self.get_surface(),displaysurface,pos,self.get_extra())
+        winmgr.place(self.get_surface(),displaysurface,pos,self.get_extra())
     def blank(self):
         s = blank_of_size(self.width,self.height)
         s.fill((0,0,0,0))

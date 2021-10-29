@@ -4,6 +4,7 @@ from pygame.display import set_mode
 from .._utils import LazyExpr,dictunion
 from ..widgets import XYPcmtMgr
 DISPLAYWIN = None
+__all__ = ["Window","config_window","getdisplaysurface","place"]
 class Window(XYPcmtMgr):
     """Represents a window.
 Arguments:
@@ -22,12 +23,12 @@ popup windows and sub-GUIs."""
         return self._dw if (self._dw is not None) else DISPLAYWIN
     def update(self):
         """Updates the display surface(drawing the child components)."""
-        for ch,po in self._childs:
+        for po,ch in self._childs:
              ch.place_at(po,self.dw)
     def fill(self,color,*a,**k):
         """Fills with a color.Extra options(like the rect) will be passed to the
 Surface.fill() method."""
-        self._dw.fill(color,*a,**k)
+        self.dw.fill(color,*a,**k)
 def config_window(width,height,flags=0):
     """Setups and returns the window with the specified dimensions and flags."""
     global DISPLAYWIN

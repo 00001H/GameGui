@@ -1,6 +1,6 @@
 from ..defaults import DEFAULT_FONT
 from ..bases import PcmtMgr
-from operators import itemgetter as _ig
+from operator import itemgetter as _ig
 _firstgetter = _ig(0)
 class XYPcmtMgr(PcmtMgr):
     def __init__(self,bg=(0,0,0,0),w=500,h=500):
