@@ -23,7 +23,7 @@ popup windows and sub-GUIs."""
         return self._dw if (self._dw is not None) else DISPLAYWIN
     def update(self):
         """Updates the display surface(drawing the child components)."""
-        for po,ch in self._childs:
+        for ch,po in self._childs:
              ch.place_at(po,self.dw)
     def fill(self,color,*a,**k):
         """Fills with a color.Extra options(like the rect) will be passed to the
@@ -49,8 +49,7 @@ HWW:WW//2
 WH:height of T
 HWH:WH//2
 
-
-Position may be a 2-tuple(x,y),a pygame.Rect object or a 4-tuple(x,y,w,h).
+Position may be a string/LazyExpr,a 2-tuple(x,y),a pygame.Rect object or a 4-tuple(x,y,w,h).
 Note:width and height are ignored."""
     rect = rendersurface.get_rect()
     if hasattr(target,"rect"):

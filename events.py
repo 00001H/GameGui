@@ -15,7 +15,7 @@ def _walk_nodes(where,node,par=None):#Really should define it in _utils.
     #Won't add rn because it's too complicated.
     nw = _NodeWrapper(node,par)
     if isinstance(node,XYPcmtMgr):
-        for subwhere,chld in node._childs:
+        for chld,subwhere in node._childs:
             yield from _walk_nodes(subwhere,chld,nw)
     yield (where,nw)
 class EventMgr:

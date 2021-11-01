@@ -15,6 +15,7 @@ font specifies the font to use,
 antialiased specifies if antialiasing should be enabled,
 align specifies the align style(LEFT,CENTER,RIGHT), and
 linespacing specifies the space between lines."""
+    @staticmethod
     def unfocusable():
         return True
     def __init__(self,text="",w=500,h=500,
