@@ -1,9 +1,9 @@
 """The Entry class."""
-from ..defaults import DEFAULT_FONT
 from ..bases import Widget
 from .._utils import getmods
-from .text import Text,LEFT
+from .text import Text
 from pygame import Surface
+from time import time
 from pygame.locals import *
 class Entry(Widget):
     """Text input box.
@@ -34,6 +34,8 @@ Other options are same as the Text widget."""
             self._handle(event)
             return True
         return False
+    def on_update(self,foc):
+        self.sec = time() if foc else 0
     def _handle(self,evt):#MUST HAVE PROPERTIES unicode,key
         if getmods(evt).ctrl:
             return#control-* should not be handled
@@ -56,12 +58,10 @@ Other options are same as the Text widget."""
         elif evt.unicode:
             self.ctx.insert(self.cursor,evt.unicode)
             self.cursor += 1
-    def addsec(self,sec):
-        self.sec += sec
     def get_surface(self):
         ctx = list(self.ctx)
         self.textwidg.cursor = -1
-        if int(self.sec*1.36)%2 == 0:
+        if int(self.sec*1.36)%2 == 1:
             self.textwidg.cursor = self.cursor
         self.textwidg.settext("".join(ctx))
         return self.textwidg.get_surface()

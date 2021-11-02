@@ -4,6 +4,12 @@ from pygame import locals as lc,Surface
 from pygame.font import match_font,Font,SysFont
 from collections import namedtuple as nt,deque
 class InternalError(Exception):pass
+def focused_in(x):return getattr(x,"focused_widget",None)
+def getdeffont():
+    return DEFFONT
+def setdeffont(fnt):
+    global DEFFONT
+    DEFFONT = fnt
 class FontBase(Font):
     """Internal class.
 All methods and attributes subject to change.
@@ -70,9 +76,7 @@ Subject to change."""
             return self.dic[attr]
         raise AttributeError()
 class SizedDict:
-    """Only used in a failed module for now.
-Isn't planned for removal.
-Kept for compability."""
+    """Sized dict for efficient caching. If full,removes the least-recently-used item."""
     def __init__(self,cap):
         self.cap = cap
         self.internal = {}
@@ -135,8 +139,9 @@ ctrl,shift,alt,capslock,numlock,windows"""
                  mod&NUMLOCKMOD,mod&WINMOD)
 
 def getsysfont(*a,**k):
-    """Gets a system font.Supports correct equality testing and hashing."""
+    """Gets a system font. Supports correct equality testing and hashing."""
     return SysFont(*a,constructor=FontBase.construct,**k)
 def getfont(*a,**k):
-    """Gets a font from path.Supports correct equality testing and hashing."""
+    """Gets a font from path. Supports correct equality testing and hashing."""
     return Font(*a,constructor=FontBase.construct,**k)
+DEFFONT = getsysfont("Courier New",22,"bold")

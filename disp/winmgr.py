@@ -1,10 +1,23 @@
 """The windows manager."""
 from pygame import Rect
 from pygame.display import set_mode
-from .._utils import LazyExpr,dictunion
+from ..bases import Transformation
+from .._utils import LazyExpr,dictunion,focused_in
+from ..events import _NodeWrapper
 from ..widgets import XYPcmtMgr
 DISPLAYWIN = None
 __all__ = ["Window","config_window","getdisplaysurface","place"]
+def _wrapped_of(w):
+    w = _underlying(w)
+    while isinstance(w,Transformation):
+        w = _underlying(w.target)
+    return w
+def _underlying(x):
+    if x is None:
+        return None
+    elif isinstance(x,_NodeWrapper):
+        return x.n
+    return x
 class Window(XYPcmtMgr):
     """Represents a window.
 Arguments:
@@ -25,6 +38,11 @@ popup windows and sub-GUIs."""
         """Updates the display surface(drawing the child components)."""
         for ch,po in self._childs:
              ch.place_at(po,self.dw)
+        self.notify(self.childs)
+    def notify(self,todo):
+        for widg in todo:
+            widg.on_update(_wrapped_of(focused_in(self)) is _wrapped_of(widg))
+            self.notify(getattr(widg,"childs",[]))
     def fill(self,color,*a,**k):
         """Fills with a color.Extra options(like the rect) will be passed to the
 Surface.fill() method."""

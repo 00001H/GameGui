@@ -1,4 +1,3 @@
-from ..defaults import DEFAULT_FONT
 from ..bases import PcmtMgr
 from operator import itemgetter as _ig
 _firstgetter = _ig(0)

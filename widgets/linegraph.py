@@ -1,4 +1,3 @@
-from ..defaults import DEFAULT_FONT
 from ..bases import Widget
 from .._utils import getsysfont as getfont
 from .text import Text
@@ -20,7 +19,8 @@ class LineGraph(Widget):
     """A simple linear graph display.
 Does not support log-log graph."""
     def __init__(self,array=None,w=300,h=200,wscale=1,dath=None,thickness=3,
-                 color=(255,255,255),dyntop=0,scalewidth=0,sfs=10,resolution=1,scalepwr=10):
+                 color=(255,255,255),dyntop=0,scalewidth=0,sfs=10,resolution=1,scalepwr=10,
+                 thefont=None):
         """Initialize the graph.
 
 Params(Note:Decimal objects can replace floats here):
@@ -56,7 +56,7 @@ for a scale power of 3.Log-log graphs are not supported."""
         self.dyntop = Decimal(dyntop)
         self.every = 1//resolution
         self.pwr = scalepwr
-        self._thefont = getfont("Courier",sfs,"")
+        self._thefont = getfont("Courier",sfs,"") if (thefont is None) else thefont
     def get_max_fit(self):
         """Returns the amount of points that can fit in one screen,
 based on the scale width,widget width,and wscale.

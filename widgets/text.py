@@ -1,7 +1,7 @@
 """The Text widget."""
-from ..defaults import DEFAULT_FONT
 from ..bases import Widget
-from .._utils import blank_of_size
+from .._utils import blank_of_size,getdeffont
+from ..cache import cwc
 from pygame.font import SysFont as getfonts
 LEFT = object()#unique
 CENTER = object()
@@ -19,8 +19,10 @@ linespacing specifies the space between lines."""
     def unfocusable():
         return True
     def __init__(self,text="",w=500,h=500,
-                 color=(255,255,255),font=DEFAULT_FONT,antialiased=True,
+                 color=(255,255,255),font=None,antialiased=True,
                  align=LEFT,linespacing=1):
+        if font is None:
+            font = getdeffont()
         self.content = text
         self.font = font
         self.color = color
@@ -48,8 +50,10 @@ linespacing specifies the space between lines."""
             i += len(line)+1
             if (cursor is None) and small and i>self.cursor:
                 whereisthecursor = lnc
-                ratio = ln.get_rect().width/len(line)
-                cursor = (int(cotl*ratio),ht)
+                leftie = 0
+                for i in range(cotl):
+                    leftie += cwc.get(self.font,line[i],self.aa)
+                cursor = (leftie,ht)
             cotl -= len(line)+1
             lines.append((ln,ht))
             ht += ln.get_rect().height+self.lsp

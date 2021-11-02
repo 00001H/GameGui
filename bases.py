@@ -9,7 +9,7 @@ class Widget(metaclass=ABCMeta):
 get_surface must return the surface to be displayed. If undisplayable,
 raise NotImplementedError().
 
-must have width and height attributes.
+Must have attributes 'width' and 'height'.
 
 place_at is not required to be overriden(and it not recommended to do so).
 
@@ -30,17 +30,35 @@ not."""
         return False
     def unfocusable(self):
         return False
+    def on_update(self,is_focused):
+        pass
     def place_at(self,pos,displaysurface):
         winmgr.place(self.get_surface(),displaysurface,pos,self.get_extra())
     def blank(self):
         s = blank_of_size(self.width,self.height)
         s.fill((0,0,0,0))
         return s
+class Transformation(Widget,metaclass=ABCMeta):
+    """Abstract class Transformation.
+
+Instances must be compatible with initializations of form
+'SomeSubClass(target_widget,width,height,**opts)'.
+
+Must have attribute 'target'.
+"""
+    def handle_event(self,evt):
+        return self.target.handle_event(evt)
+    def unfocusable(self,*a,**k):
+        return self.target.unfocusable(*a,**k)
+    def on_update(self,isfoc):
+        return self.target.on_update(isfoc)
 class PcmtMgr(Widget,metaclass=ABCMeta):
     """Abstract class PcmtMgr.(Placement Manager).
+
 Must support add to add child widgets.
 Subclasses must either store child widgets(with NO EXTRA INFORMATION) in the _childs list
-(Note:may store extra information in other attributes),or override the childs property."""
+(Note:may store extra information in other attributes),or override the childs property
+to return the list of childs)."""
     @abstractmethod
     def add(self,child):
         raise NotImplementedError()

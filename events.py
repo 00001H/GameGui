@@ -1,19 +1,26 @@
 import pygame
 from ._utils import RuntimeModifiable as RMod
 from .widgets import XYPcmtMgr
+from .bases import Transformation
 from pygame import KEYDOWN,K_ESCAPE,K_F11,MOUSEBUTTONDOWN
 __all__ = ["EventMgr","start_loop"]
 class _NodeWrapper:
-    def __init__(self,node,par):
+    def __init__(self,node,par,dct=None):
         self.n = node
         self.parent = par
+        self._dct = {} if (dct is None) else dct
     def __getattr__(self,attr):
+        if attr in self._dct:
+            return self._dct[attr]
         return getattr(self.n,attr)
 def _walk_nodes(where,node,par=None):#Really should define it in _utils.
     #WARNING:Only works on XYPcmtMgr.Planning to support other placement
     #managers with a get_where() method.
     #Won't add rn because it's too complicated.
-    nw = _NodeWrapper(node,par)
+    if isinstance(node,Transformation):
+        nw = _NodeWrapper(node.target,par,{"width":node.width,"height":node.height})
+    else:
+        nw = _NodeWrapper(node,par)
     if isinstance(node,XYPcmtMgr):
         for chld,subwhere in node._childs:
             yield from _walk_nodes(subwhere,chld,nw)
@@ -30,7 +37,6 @@ Removes events that are processed."""
             evts = pygame.event.get()
         evtscpy = list(evts)
         for evt in evtscpy:#won't say list size changed during iteration then
-            isvalid = True
             if evt.type == MOUSEBUTTONDOWN:
                 for pos,widg in _walk_nodes((0,0),self.w):
                     if (widg.n is self.w) or widg.unfocusable():
@@ -39,16 +45,14 @@ Removes events that are processed."""
                     if rec.collidepoint(evt.pos):
                         if self.w.focused_widget != widg:
                             self.w.focused_widget = widg
-                            isvalid = False#the "focusing" click should be ignored
-            if isvalid:
-                if self.w.focused_widget is not None:
-                    current = self.w.focused_widget
-                    while not current.handle_event(evt):#keep going parent if can't handle
-                        current = current.parent#move up a level
-                        if current.n is self.w:#no handler
-                            break
-                    else:#loop-else triggers if not stopped with a break statement
-                        evts.remove(evt)#found handler;delete event
+            if self.w.focused_widget is not None:
+                current = self.w.focused_widget
+                while not current.handle_event(evt):#keep going parent if can't handle
+                    current = current.parent#move up a level
+                    if current.n is self.w:#no handler
+                        break
+                else:#loop-else triggers if not stopped with a break statement
+                    evts.remove(evt)#found handler;delete event
 def start_loop(win,callback,fps=60,quit_on_esc=False,no_quit=False,evh=None):
     should_stop = False
     clk = pygame.time.Clock()
