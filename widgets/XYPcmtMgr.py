@@ -8,11 +8,9 @@ class XYPcmtMgr(PcmtMgr):
         self._childs = []
     def add(self,child,pos):
         self._childs.append((child,pos))
-    def get_surface(self):
-        surf = self.blank()
-        for widg,pos in self._childs:
-            widg.place_at(pos,surf)
-        return surf
+    def enumerate_childs(self):
+        for ch,po in self._childs:
+            yield ch,(po[1],po[0])
     @property
     def childs(self):
         return tuple(map(_firstgetter,self._childs))

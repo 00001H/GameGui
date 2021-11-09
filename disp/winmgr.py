@@ -36,8 +36,8 @@ popup windows and sub-GUIs."""
         return self._dw if (self._dw is not None) else DISPLAYWIN
     def update(self):
         """Updates the display surface(drawing the child components)."""
-        for ch,po in self._childs:
-             ch.place_at(po,self.dw)
+        self.RENDER_SURFACE = self.dw
+        super().get_surface()#renders
         self.notify(self.childs)
     def notify(self,todo):
         for widg in todo:

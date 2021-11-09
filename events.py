@@ -14,15 +14,12 @@ class _NodeWrapper:
             return self._dct[attr]
         return getattr(self.n,attr)
 def _walk_nodes(where,node,par=None):#Really should define it in _utils.
-    #WARNING:Only works on XYPcmtMgr.Planning to support other placement
-    #managers with a get_where() method.
-    #Won't add rn because it's too complicated.
     if isinstance(node,Transformation):
         nw = _NodeWrapper(node.target,par,{"width":node.width,"height":node.height})
     else:
         nw = _NodeWrapper(node,par)
     if isinstance(node,XYPcmtMgr):
-        for chld,subwhere in node._childs:
+        for chld,subwhere in node.enumerate_childs():
             yield from _walk_nodes(subwhere,chld,nw)
     yield (where,nw)
 class EventMgr:
@@ -43,8 +40,7 @@ Removes events that are processed."""
                         continue
                     rec = pygame.Rect(pos[0],pos[1],widg.width,widg.height)
                     if rec.collidepoint(evt.pos):
-                        if self.w.focused_widget != widg:
-                            self.w.focused_widget = widg
+                        self.w.focused_widget = widg
             if self.w.focused_widget is not None:
                 current = self.w.focused_widget
                 while not current.handle_event(evt):#keep going parent if can't handle

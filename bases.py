@@ -35,6 +35,8 @@ not."""
     def place_at(self,pos,displaysurface):
         winmgr.place(self.get_surface(),displaysurface,pos,self.get_extra())
     def blank(self):
+        if hasattr(self,"RENDER_SURFACE"):
+            return self.RENDER_SURFACE
         s = blank_of_size(self.width,self.height)
         s.fill((0,0,0,0))
         return s
@@ -58,9 +60,21 @@ class PcmtMgr(Widget,metaclass=ABCMeta):
 Must support add to add child widgets.
 Subclasses must either store child widgets(with NO EXTRA INFORMATION) in the _childs list
 (Note:may store extra information in other attributes),or override the childs property
-to return the list of childs)."""
+to return the list of childs).
+Must also support enumerate_childs to return an iterable of (child,position) tuples.
+Default get_surface uses enumerate_childs to determine positions.
+Also, event handlers rely on them and unless you really know what you are doing,
+please define enumerate_childs properly."""
     @abstractmethod
     def add(self,child):
+        raise NotImplementedError()
+    def get_surface(self):
+        surf = self.blank()
+        for widg,pos in self.enumerate_childs():
+            widg.place_at(pos,surf)
+        return surf
+    @abstractmethod
+    def enumerate_childs(self):
         raise NotImplementedError()
     @property
     def childs(self):
