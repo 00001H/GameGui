@@ -49,26 +49,39 @@ Removes events that are processed."""
                         break
                 else:#loop-else triggers if not stopped with a break statement
                     evts.remove(evt)#found handler;delete event
-def start_loop(win,callback,fps=60,quit_on_esc=False,no_quit=False,evh=None):
+def start_loop(win,callback,fps=60,no_quit=False,evm=None):
+    """Starts the event loop.
+args:
+win: the window
+callback: the callback called to display each frame. It should update the display as this
+function will not do it by default.
+no_quit: if True, will not quit the event loop if pygame.QUIT event is generated(by
+clicking the X or calling pygame.event.put())
+evm: The event manager. Will create a new one by default.
+
+Callback should accept 4 arguments: the event list, the current frame, the current
+fps(as returned by clock.get_fps(), will be 0 for the first 10 frames), and a
+RuntimeModifiable that is basically a class with no methods and limited to some attributes.
+The callback may fetch it or change it by using
+runtimemodifiable.field [= new]
+
+Current attributes: target_fps     the target fps(passed in the fps argument when starting
+the loop)"""
     should_stop = False
     clk = pygame.time.Clock()
     frame = 0
     data = RMod(["target_fps"])
     data.target_fps = fps
-    if evh is None:
-        evh = EventMgr(win)
+    if evm is None:
+        evm = EventMgr(win)
     while True:
         events = []
         for event in pygame.event.get():
             if (not no_quit) and event.type == pygame.QUIT:
                 should_stop = True
                 break
-            if event.type == KEYDOWN:
-                if quit_on_esc and event.key == K_ESCAPE:
-                    should_stop = True
-                    break
             events.append(event)
-        evh.handle_events(events)
+        evm.handle_events(events)
         if data.target_fps == -1:
             clk.tick()
         else:

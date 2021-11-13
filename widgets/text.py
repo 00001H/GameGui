@@ -8,6 +8,10 @@ LEFT = object()#unique
 CENTER = object()
 RIGHT = object()
 class StyleChange:
+    """Style change.
+Avaliable kinds: StyleChange.AA    antialiasing change
+                 StyleChange.LSP   line spacing change
+                 StyleChange.COLOR color change"""
     AA = object()
     LSP = object()
     COLOR = object()
@@ -43,11 +47,11 @@ def render(it,t,sch,begini):
         sfc.append((sf,r.width))
         if info:
             k = info.k
-            if k == aac:
+            if k is aac:
                 it.aa = k.n
-            elif k == lspc:
+            elif k is lspc:
                 it.lsp = k.n
-            elif k == clrc:
+            elif k is clrc:
                 it.color = k.n
             else:
                 raise ValueError(f"Unsupported text render style change type!")
