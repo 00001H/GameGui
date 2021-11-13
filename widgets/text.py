@@ -123,8 +123,8 @@ linespacing specifies the space between lines."""
             if (cursor is None) and small and i>self.cursor:
                 whereisthecursor = lnc
                 leftie = 0
-                for i in range(cotl):
-                    leftie += cdc.get(self.font,line[i],self.aa).width
+                for j in range(cotl):
+                    leftie += cdc.get(self.font,line[j],self.aa).width
                 cursor = (leftie,ht)
                 charh = ln.get_rect().height
             cotl -= len(line)+1
