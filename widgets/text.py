@@ -101,6 +101,7 @@ linespacing specifies the space between lines."""
         self.cursor = -1
         self.lsp = linespacing
         self.sch = list(stylechanges)
+        self.TH = self.HTH = 0
     def settext(self,text):
         self.content = text
     def get_surface(fles):
@@ -133,7 +134,7 @@ linespacing specifies the space between lines."""
         lh = ln.get_rect().height
         if charh==-1:
             charh = cdc.get(self.font,"|",self.aa).height
-        if ssch[-1].k is clrc:
+        if ssch and (ssch[-1].k is clrc):
             self.color = ssch[-1].n
         if ht:
             ht -= self.lsp

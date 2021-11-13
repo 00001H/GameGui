@@ -10,7 +10,7 @@ class XYPcmtMgr(PcmtMgr):
         self._childs.append((child,pos))
     def enumerate_childs(self):
         for ch,po in self._childs:
-            yield ch,(po[1],po[0])
+            yield (ch,po)
     @property
     def childs(self):
         return tuple(map(_firstgetter,self._childs))

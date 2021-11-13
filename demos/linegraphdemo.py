@@ -1,10 +1,11 @@
 import pygame,gamegui
 from collections import deque
 from pygame.locals import *
-from gamegui.defaults import DEFAULT_FONT as df
 from math import sqrt
-win = gamegui.window(1100,600)
+gamegui.config_window(1100,600)
+win = gamegui.Window()
 g = gamegui.LineGraph(None,1100,400,scalewidth=80,sfs=15,scalepwr=40)
+win.add(g,"($HSW-$HWW,100)")
 x = deque()
 def div(x,y):
     if y==0:
@@ -22,8 +23,8 @@ def frame(events,frame,fps,rmod):
     if len(x)>g.get_max_fit():
         x.popleft()
     g.array = x
-    g.place_at("($HSW-$HWW,100)",win)
+    win.update()
     gamegui.disp.update()
-gamegui.start_loop(frame,fps=60)
+gamegui.start_loop(win,frame,fps=60)
 pygame.quit()
 exit()

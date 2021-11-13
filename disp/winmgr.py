@@ -3,7 +3,6 @@ from pygame import Rect
 from pygame.display import set_mode
 from ..bases import Transformation
 from .._utils import LazyExpr,dictunion,focused_in
-from ..events import _NodeWrapper
 from ..widgets import XYPcmtMgr
 DISPLAYWIN = None
 __all__ = ["Window","config_window","getdisplaysurface","place"]
@@ -55,6 +54,34 @@ def config_window(width,height,flags=0):
 def getdisplaysurface():
     """Returns the current display surface."""
     return DISPLAYWIN
+def getrect(target,position,extra=None,rs=None):
+    if rs is None:
+        rs = DISPLAYWIN
+    rect = rs.get_rect()
+    if hasattr(target,"width") and hasattr(target,"height"):
+        ww,wh = target.width,target.height
+    else:
+        if hasattr(target,"rect"):
+            wrect = target.rect
+        else:
+            wrect = target.get_rect()
+        ww,wh = wrect.width,wrect.height
+    sw,sh = rect.width,rect.height
+    if extra is None:
+        extra = {}
+    if isinstance(position,str):
+        position = LazyExpr(position)
+    if isinstance(position,LazyExpr):
+        position = position.get(dictunion({"SW":sw,
+                                 "SH":sh,
+                                 "HSW":sw//2,
+                                 "HSH":sh//2,
+                                 "WW":ww,
+                                 "WH":wh,
+                                 "HWW":ww//2,
+                                 "HWH":wh//2},extra))
+    position = position[:2]
+    return position
 def place(target,rendersurface,position,extra=None):
     """Blits the target to the rendersurface.
 Default lazy expression values:(RS means rendersurface,T means target)
@@ -69,25 +96,6 @@ HWH:WH//2
 
 Position may be a string/LazyExpr,a 2-tuple(x,y),a pygame.Rect object or a 4-tuple(x,y,w,h).
 Note:width and height are ignored."""
-    rect = rendersurface.get_rect()
-    if hasattr(target,"rect"):
-        wrect = target.rect
-    else:
-        wrect = target.get_rect()
-    sw,sh = rect.width,rect.height
-    ww,wh = wrect.width,wrect.height
-    if extra is None:
-        extra = {}
-    if isinstance(position,str):
-        position = LazyExpr(position)
-    if isinstance(position,LazyExpr):
-        position = position.get(dictunion({"SW":sw,
-                                 "SH":sh,
-                                 "HSW":sw//2,
-                                 "HSH":sh//2,
-                                 "WW":ww,
-                                 "WH":wh,
-                                 "HWW":ww//2,
-                                 "HWH":wh//2},extra))
-    position =  position[:2]
+    position = getrect(target,position,extra,rendersurface)
     rendersurface.blit(target,tuple(position))
+from ..events import _NodeWrapper
