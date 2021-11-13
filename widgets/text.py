@@ -1,9 +1,8 @@
 """The Text widget."""
 from ..bases import Widget
 from .._utils import blank_of_size,getdeffont
-from ..cache import cwc
+from ..cache import cdc
 from collections import deque
-from pygame.font import SysFont as getfonts
 LEFT = object()#unique
 CENTER = object()
 RIGHT = object()
@@ -19,13 +18,21 @@ Avaliable kinds: StyleChange.AA    antialiasing change
         self.where = where
         self.k = kind
         self.n = new
+    def __lt__(self,other):#for sorting
+        return self.where<other.where
+    def __le__(self,other):
+        return self.where<=other.where
+    def __gt__(self,other):
+        return not (self<=other)
+    def __ge__(self,other):
+        return not (self<other)
 aac = StyleChange.AA
 lspc = StyleChange.LSP
 clrc = StyleChange.COLOR
 atable = {
 }
 def render(it,t,sch,begini):
-    sch = deque((i for i in sch if not (begini <= i <= begini+len(t))))
+    sch = deque((i for i in sch if (begini <= i.where <= begini+len(t))))
     font = it.font
     segs = []
     token = ""
@@ -48,11 +55,11 @@ def render(it,t,sch,begini):
         if info:
             k = info.k
             if k is aac:
-                it.aa = k.n
+                it.aa = info.n
             elif k is lspc:
-                it.lsp = k.n
+                it.lsp = info.n
             elif k is clrc:
-                it.color = k.n
+                it.color = info.n
             else:
                 raise ValueError(f"Unsupported text render style change type!")
     final = blank_of_size(tw,mh)
@@ -93,7 +100,7 @@ linespacing specifies the space between lines."""
         self.height = h
         self.cursor = -1
         self.lsp = linespacing
-        self.sch = tuple(stylechanges)
+        self.sch = list(stylechanges)
     def settext(self,text):
         self.content = text
     def get_surface(fles):
@@ -105,6 +112,7 @@ linespacing specifies the space between lines."""
         cotl = self.cursor
         whereisthecursor = 0
         ssch = tuple(sorted(self.sch))
+        charh = -1
         for lnc,line in enumerate(self.content.split("\n")):
             small = i<self.cursor
             if i==self.cursor:
@@ -116,20 +124,25 @@ linespacing specifies the space between lines."""
                 whereisthecursor = lnc
                 leftie = 0
                 for i in range(cotl):
-                    leftie += cwc.get(self.font,line[i],self.aa)
+                    leftie += cdc.get(self.font,line[i],self.aa).width
                 cursor = (leftie,ht)
+                charh = ln.get_rect().height
             cotl -= len(line)+1
             lines.append((ln,ht))
             ht += ln.get_rect().height+self.lsp
-        charh = ln.get_rect().height
+        lh = ln.get_rect().height
+        if charh==-1:
+            charh = cdc.get(self.font,"|",self.aa).height
+        if ssch[-1].k is clrc:
+            self.color = ssch[-1].n
         if ht:
             ht -= self.lsp
         if (cursor is None) and self.cursor!=-1:
             cursor = (ln.get_rect().width,ht-charh)
             whereisthecursor = lnc
         sf = self.blank()
-        self.TH = ht
-        self.HTH = ht//2
+        fles.TH = ht#modify the 'real self'
+        fles.HTH = ht//2
         xdiff = 0
         for i,(lnsf,y) in enumerate(lines):
             if self.align is LEFT:
@@ -148,7 +161,6 @@ linespacing specifies the space between lines."""
                 xdiff = x
             sf.blit(lnsf,(x,y))
         if cursor is not None:
-##            print("Displaying with XDIFF",xdiff,"'Cause",lnsf.get_rect().width)
             sf.fill(self.color,(cursor[0]+xdiff,cursor[1],2,charh))
         return sf
     def get_extra(self):

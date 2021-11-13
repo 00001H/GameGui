@@ -1,5 +1,5 @@
 from ._utils import SizedDict
-class CWCache:
+class CDCache:
     def __init__(self):
         self.cache = SizedDict(200)
         self.fmisses = 0
@@ -15,7 +15,7 @@ class CWCache:
         else:
             self.fhits += 1
         if char not in self.cache[font]:
-            self.cache[font][char] = font.render(char,aa,(0,0,0)).get_rect().width
+            self.cache[font][char] = font.render(char,aa,(0,0,0)).get_rect()
             self.cmisses[font] += 1
         else:
             self.chits[font] += 1
@@ -29,4 +29,4 @@ class CWCache:
         rslt = rslt.rstrip(",")
         rslt += ")"
         return rslt
-cwc = CWCache()
+cdc = CDCache()
