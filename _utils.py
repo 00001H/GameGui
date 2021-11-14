@@ -3,13 +3,35 @@ from .mast import literal_eval as _le
 from pygame import locals as lc,Surface
 from pygame.font import match_font,Font,SysFont
 from collections import namedtuple as nt,deque
-class InternalError(Exception):pass
 def focused_in(x):return getattr(x,"focused_widget",None)
 def getdeffont():
     return DEFFONT
 def setdeffont(fnt):
     global DEFFONT
     DEFFONT = fnt
+class _NodeWrapper:
+    def __init__(self,node,par,dct=None):
+        self.n = node
+        self.parent = par
+        self._dct = {} if (dct is None) else dct
+    def __getattr__(self,attr):
+        if attr in self._dct:
+            return self._dct[attr]
+        return getattr(self.n,attr)
+def walk_nodes(where,node,par=None):
+    from .bases import PcmtMgr,Transformation
+    if isinstance(node,Transformation):
+        wid = node.width
+        ht = node.height
+        while isinstance(node,Transformation):
+            node = node.target
+        nw = _NodeWrapper(node,par,{"width":wid,"height":ht})
+    else:
+        nw = _NodeWrapper(node,par)
+    if isinstance(node,PcmtMgr):
+        for chld,subwhere in node.enumerate_childs():
+            yield from walk_nodes(subwhere,chld,nw)
+    yield (nw,where)
 class FontBase(Font):
     """Internal class.
 All methods and attributes subject to change.
@@ -107,7 +129,7 @@ class SizedDict:
                     self.updated.pop(ind)
                     self.updated.append(item)
             else:
-                raise InternalError(f"{item} not in self.updated({self.updated})")
+                raise RuntimeError(f"{item} not in self.updated({self.updated})")
     def __getitem__(self,item):
         return self.internal[item]
     def __str__(self):

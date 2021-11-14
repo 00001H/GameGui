@@ -1,6 +1,6 @@
 """Defines abstract classes."""
-from .disp import winmgr
 from ._utils import blank_of_size
+from .disp import winmgr
 from abc import *
 from pygame import Surface
 class Widget(metaclass=ABCMeta):
@@ -11,7 +11,7 @@ raise NotImplementedError().
 
 Must have attributes 'width' and 'height'.
 
-place_at is not required to be overriden(and it not recommended to do so).
+place_at is not recommended to be overriden.
 
 get_extra will be called after get_surface to return the extra arguments to evaluate the
 lazy expression(if any).May or may not be overriden.Default is to return an empty dict.
@@ -62,9 +62,7 @@ Subclasses must either store child widgets(with NO EXTRA INFORMATION) in the _ch
 (Note:may store extra information in other attributes),or override the childs property
 to return the list of childs).
 Must also support enumerate_childs to return an iterable of (child,position) tuples.
-Default get_surface uses enumerate_childs to determine positions.
-Also, event handlers rely on them and unless you really know what you are doing,
-please define enumerate_childs properly."""
+It is used by the default get_surface implementation."""
     @abstractmethod
     def add(self,child):
         raise NotImplementedError()
@@ -79,4 +77,3 @@ please define enumerate_childs properly."""
     @property
     def childs(self):
         return tuple(self._childs)
-
