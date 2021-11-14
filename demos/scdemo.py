@@ -6,7 +6,6 @@ win = gamegui.Window()
 gamegui.setdeffont(gamegui.SysFont("Courier New",45))
 pygame.display.set_caption("Text test")
 t = gamegui.Entry("",900,650)
-t.sch = []
 colornames = "red lightblue green yellow white gray".split()
 def sat(x):
     return displaycolor(saturate(x,0.88))
