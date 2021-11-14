@@ -1,27 +1,8 @@
 import pygame
-from ._utils import RuntimeModifiable as RMod
-from .bases import Transformation,PcmtMgr
+from ._utils import RuntimeModifiable as RMod,_NodeWrapper,walk_nodes
 from pygame import KEYDOWN,K_ESCAPE,K_F11,MOUSEBUTTONDOWN
 from .disp.winmgr import getrect
 __all__ = ["EventMgr","start_loop"]
-class _NodeWrapper:
-    def __init__(self,node,par,dct=None):
-        self.n = node
-        self.parent = par
-        self._dct = {} if (dct is None) else dct
-    def __getattr__(self,attr):
-        if attr in self._dct:
-            return self._dct[attr]
-        return getattr(self.n,attr)
-def _walk_nodes(where,node,par=None):#Really should define it in _utils.
-    if isinstance(node,Transformation):
-        nw = _NodeWrapper(node.target,par,{"width":node.width,"height":node.height})
-    else:
-        nw = _NodeWrapper(node,par)
-    if isinstance(node,PcmtMgr):
-        for chld,subwhere in node.enumerate_childs():
-            yield from _walk_nodes(subwhere,chld,nw)
-    yield (nw,where)
 class EventMgr:
     """Event Manager."""
     def __init__(self,window):
@@ -35,7 +16,7 @@ Removes events that are processed."""
         evtscpy = list(evts)
         for evt in evtscpy:#won't say list size changed during iteration then
             if evt.type == MOUSEBUTTONDOWN:
-                for widg,pos in _walk_nodes((0,0),self.w):
+                for widg,pos in walk_nodes((0,0),self.w):
                     if (widg.n is self.w) or widg.unfocusable():
                         continue
                     rec = pygame.Rect(*getrect(widg,pos,widg.get_extra()),widg.width,
