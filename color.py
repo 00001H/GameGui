@@ -1,4 +1,4 @@
-from operator import add as numadd,mul
+from operator import mul as _mul
 from functools import partial
 from itertools import zip_longest
 name_color_map = {
@@ -21,7 +21,7 @@ def name2color(name):
 def apply(color,func):
     return tuple(map(func,color))
 def saturate(color,sat):
-    func = partial(mul,sat)
+    func = partial(_mul,sat)
     return apply(color,func)
 def clampi(x):
     return max(0,min(255,x))
@@ -29,6 +29,8 @@ def clamp(color):
     return apply(color,clampi)
 def displaycolor(color):
     return apply(clamp(color),int)
+def numadd(x):
+    return x[0]+x[1]
 def add(a,b):
     return tuple(map(numadd,zip_longest(a,b,fillvalue=255)))
 def add_amul(a,b):
@@ -36,7 +38,7 @@ def add_amul(a,b):
 def grayscale(brightness):
     return (brightness,brightness,brightness)
 def mix(a,b,r):
-    return add(apply(a,partial(mul,r)),apply(b,partial(mul(1-r))))
+    return add(apply(a,partial(_mul,r)),apply(b,partial(_mul,1-r)))
 def blend(front,back):
     alp = alpha(front)
     return mix(solid(front),solid(back)*alpha(back),alp/255)
