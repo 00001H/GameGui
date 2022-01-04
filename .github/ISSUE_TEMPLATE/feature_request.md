@@ -17,7 +17,7 @@ If you know how to add it, please let us know how. We can also let you be a coll
 
 E.g.
 
-The code xxx/yyy/zzz.py shoudl be changed.
+The code xxx/yyy/zzz.py should be changed.
 
 Line 17(`xxx = math.sin(yyy)`) should be changed to `xxx = -math.sin(yyy)`,
 and line 18(`zzz = func(xxx)`) should be changed to `zzz = -abs(func(xxx))` because then it is ok to input a negative number.

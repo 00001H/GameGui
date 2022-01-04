@@ -9,9 +9,9 @@ ent = gamegui.Entry(align=gamegui.CENTER,antialiased=True)
 ent2 = gamegui.Entry(align=gamegui.CENTER,antialiased=True)
 win.add(
         Boxed(
-              Background(ent,w=400,h=600,color=(220,170,80)),
+              Background(ent,w=400,h=600,color=(220,170,80))
               400,600,
-              2,(255,0,0)#,False
+              2,(255,0,0)
         ),
         (0,0)
 )
@@ -19,7 +19,7 @@ win.add(
         Boxed(
               Background(ent2,w=400,h=600,color=(220,170,80)),
               400,600,
-              2,(255,0,0)#,False
+              2,(255,0,0)
         ),
         (400,0)
 )
