@@ -35,5 +35,5 @@ reload: Whether to reload the image or keep the surface as-is."""
 for rendering.
 The returned widget has the same dimensions as the image."""
         def func(surf):
-            surf.blit((0,0),self.surface)
+            surf.blit(self.surface,(0,0))
         return CustomWidget(self.surface.get_size(),func)
