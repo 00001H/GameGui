@@ -26,6 +26,7 @@ WARNING:Events won't be scaled!Use with interacting widgets at your own risk."""
         func = (smoothscale if self.aa else scale)
         return func(self.target.get_surface(),(self.width,self.height))
 class Background(Trans):
+    """Places the target widget on a colored background."""
     def __init__(self,targetwidget,w=None,h=None,color=(0,0,0,255)):
         self.target = targetwidget
         self._width = w
@@ -49,6 +50,8 @@ class Background(Trans):
         s.blit(self.target.get_surface(),(0,0))
         return s
 class Boxed(Trans):
+    """Places the target widget in a frame with a custom color.
+boxw: Width of the border."""
     def __init__(self,targetwidget,w,h,boxw=2,color=(0,0,0,255)):
         self.target = targetwidget
         self.width = w
@@ -64,13 +67,15 @@ class Boxed(Trans):
         s.fill(self.cl,Rect(self.width-self.bw,0,self.bw,self.height))
         return s
 class Origined(Trans):
-    """Crops the target to a specific dimension."""
-    def __init__(self,targetwidget,w,h):
+    """Puts the target on a blank transparent surface, with an offset."""
+    def __init__(self,targetwidget,w,h,xoff,yoff):
         self.target = targetwidget
         self.width = w
         self.height = h
+        self.xoff = xoff
+        self.yoff = yoff
     def get_surface(self):
         b = self.blank()
         t = self.target
-        self.target.place_at((t.width-self.width,t.height-self.height),b)
+        self.target.place_at((self.xoff,self.yoff),b)
         return b

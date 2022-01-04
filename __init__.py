@@ -8,3 +8,5 @@ from .events import *
 from .widgets import *
 from ._utils import getdeffont,setdeffont,getsysfont as SysFont,getfont as Font
 from .transform import *
+from .image import Image
+from .custom import CustomWidget

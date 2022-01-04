@@ -11,6 +11,8 @@ class Entry(Widget):
 text specifies default text,
 w and h specifies dimensions.
 Other options are same as the Text widget."""
+    def unfocusable(self):
+        return False
     def __init__(self,text="",w=500,h=500,*a,**k):
         self.ctx = list(text)
         self.textwidg = Text("",w,h,*a,**k)

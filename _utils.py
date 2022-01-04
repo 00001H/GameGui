@@ -5,8 +5,10 @@ from pygame.font import match_font,Font,SysFont
 from collections import namedtuple as nt,deque
 def focused_in(x):return getattr(x,"focused_widget",None)
 def getdeffont():
+    """Returns the default font."""
     return DEFFONT
 def setdeffont(fnt):
+    """Sets the default font to a new font."""
     global DEFFONT
     DEFFONT = fnt
 class _NodeWrapper:

@@ -29,7 +29,7 @@ not."""
     def handle_event(self,event):
         return False
     def unfocusable(self):
-        return False
+        return True
     def on_update(self,is_focused):
         pass
     def place_at(self,pos,displaysurface):
