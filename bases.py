@@ -35,8 +35,6 @@ not."""
     def place_at(self,pos,displaysurface):
         winmgr.place(self.get_surface(),displaysurface,pos,self.get_extra())
     def blank(self):
-        if hasattr(self,"RENDER_SURFACE"):
-            return self.RENDER_SURFACE
         s = blank_of_size(self.width,self.height)
         s.fill((0,0,0,0))
         return s

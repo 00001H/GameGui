@@ -15,7 +15,7 @@ width and height specifies the dimensions of the generated surface.
         self.height = h
         self.bg = bg
         self._childs = []
-    def blank():
+    def blank(self):
         """\
 Overrides the default blank() implementation to add background color."""
         blnk = super().blank()

@@ -28,15 +28,21 @@ popup windows and sub-GUIs."""
     def __init__(self,dw=None):
         self._childs = []
         self._dw = dw
+        self.bg = (0,0,0,0)
     def get_surface(self):
         raise NotImplementedError()
     @property
     def dw(self):
         return self._dw if (self._dw is not None) else DISPLAYWIN
+    @property
+    def width(self):
+        return self.dw.get_width()
+    @property
+    def height(self):
+        return self.dw.get_height()
     def update(self):
         """Updates the display surface(drawing the child components)."""
-        self.RENDER_SURFACE = self.dw
-        super().get_surface()#renders
+        self.dw.blit(super().get_surface(),(0,0))
         self.notify(self.childs)
     def notify(self,todo):
         for widg in todo:
