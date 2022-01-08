@@ -25,7 +25,7 @@ Removes events that are processed."""
                         self.w.focused_widget = widg
             if self.w.focused_widget is not None:
                 current = self.w.focused_widget
-                while not current.handle_event(evt):#keep going parent if can't handle
+                while not current._handle_event(evt):#keep going parent if can't handle
                     current = current.parent#move up a level
                     if current.n is self.w:#no handler
                         break

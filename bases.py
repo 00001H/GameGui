@@ -20,7 +20,10 @@ handle_event takes an event and handles it,and should return True if consumed,
 False if not.
 
 unfocusable returns a boolean to indicate whether it is unfocusable by mouse click or
-not."""
+not.
+
+User may assign a function evh_override that takes 2 arguments(self,event)
+to override the event handling behavior."""
     @abstractmethod
     def get_surface(self):
         raise NotImplementedError()
@@ -28,6 +31,8 @@ not."""
         return {}
     def handle_event(self,event):
         return False
+    def _handle_event(self,event):
+        return getattr(self,"evh_override",self.handle_event)(self,event)
     def unfocusable(self):
         return True
     def on_update(self,is_focused):
