@@ -2,9 +2,9 @@ from os import walk
 from os.path import join
 mods = []
 for currr,subd,subf in walk(".."):
-    curr = currr[currr.find("gamegui"):]
-    if "." in curr:
+    if "." in currr:
         continue
+    curr = currr[currr.find("gamegui"):]
     curr = curr.replace("\\","/").replace("/",".")
     mods.append(curr)
     for f in subf:
@@ -21,3 +21,4 @@ for mod in mods:
         if isinstance(v,(functype,mthtype,type)):
             if not getattr(v,"__doc__",""):
                 print(f"You should document {mod}.{k}")
+input()
