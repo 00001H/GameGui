@@ -23,6 +23,19 @@ Overrides the default blank() implementation to add background color."""
         return blnk
     def add(self,child,pos):
         self._childs.append((child,pos))
+    def remove(self,child,noerror=False):
+        """\
+WARNING: Linear O(N) Complexity! Not fast!"""
+        rmv = -1
+        for i,(chl,p) in enumerate(self._childs):
+            if chl==child:
+                rmv = i
+                break
+        if (rmv == -1) and (not noerror):
+            raise IndexError(
+f"Widget not found: removing {child}(of class {type(child).__name__})")
+        if (rmv != -1):
+            del self._childs[rmv]
     def enumerate_childs(self):
         for ch,po in self._childs:
             yield (ch,po)
