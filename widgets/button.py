@@ -16,7 +16,7 @@ class Button(Widget):
     def text(self,new):
         self._texw.content = new
     def handle_event(self,event):
-        if event.type == MOUSEBUTTONDOWN:
+        if event.type == MOUSEBUTTONDOWN and event.button == 1:
             self.action(event)
             return True
         return False
