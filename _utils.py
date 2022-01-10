@@ -63,28 +63,6 @@ VALUE must be a string."""
         for key in dic:
             va = va.replace("$"+key,repr(dic[key]))
         return _le(va)
-class Opts:
-    """Internal class.
-Allows multiple options in one value.
-EXAMPLE:
-
-YES = 0b1
-NO = 0b10
-DISPLAY_NOW = 0b100
-HAS_BOOLEAN = Opts(YES,NO)
-
-CONFIG = YES|DISPLAY_NOW
-
-assert     CONFIG        &  HAS_BOOLEAN
-assert     NO            &  HAS_BOOLEAN
-assert not DISPLAY_NOW   &  HAS_BOOLEAN"""
-    def __init__(self,*opts):
-        self.opts = opts
-    def __rand__(self,val):
-        for opt in self.opts:
-            if val&opt:
-                return True
-        return False
 class RuntimeModifiable:
     """Internal class to store attributes.Can be passed to functions to change configs.
 Subject to change."""
@@ -147,10 +125,10 @@ y takes priority for duplicate keys."""
     cop = x.copy()
     cop.update(y)
     return cop
-SHIFTMOD = Opts(1,2)
-CTRLMOD = Opts(64,128)
-ALTMOD = Opts(256,512)
-WINMOD = Opts(1024,2048)
+SHIFTMOD = 1|2
+CTRLMOD = 64|128
+ALTMOD = 256|512
+WINMOD = 1024|2048
 NUMLOCKMOD = 4096
 CAPSLOCKMOD = 8192
 _mods = nt("keymods","ctrl shift alt capslock numlock windows".split())
@@ -159,8 +137,8 @@ def getmods(evt):
 Returns a namedtuple 'keymods' with attributes
 ctrl,shift,alt,capslock,numlock,windows"""
     mod = evt.mod
-    return _mods(mod&CTRLMOD,mod&SHIFTMOD,mod&ALTMOD,mod&CAPSLOCKMOD,
-                 mod&NUMLOCKMOD,mod&WINMOD)
+    return _mods(bool(mod&CTRLMOD),bool(mod&SHIFTMOD),bool(mod&ALTMOD),
+                 bool(mod&CAPSLOCKMOD),bool(mod&NUMLOCKMOD),bool(mod&WINMOD))
 
 def getsysfont(*a,**k):
     """Gets a system font. Supports correct equality testing and hashing."""
