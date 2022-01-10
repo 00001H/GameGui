@@ -12,6 +12,7 @@ raise NotImplementedError().
 Must have attributes 'width' and 'height'.
 
 place_at is not recommended to be overriden.
+_handle_event should not be overriden. This enables the user to customize event handling.
 
 get_extra will be called after get_surface to return the extra arguments to evaluate the
 lazy expression(if any).May or may not be overriden.Default is to return an empty dict.
