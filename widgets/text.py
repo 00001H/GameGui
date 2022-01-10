@@ -103,9 +103,11 @@ linespacing specifies the space between lines."""
         self.sch = list(stylechanges)
         self.TH = self.HTH = 0
         self.bgc = bgcolor
+        self._got_surface = False
     def settext(self,text):
         self.content = text
     def get_surface(fles):
+        fles._got_surface = True
         self = Dummy(fles)#Won't change color, font etc. forever
         lines = []
         ht = 0
@@ -170,4 +172,6 @@ linespacing specifies the space between lines."""
             sf.fill(self.color,(cursor[0]+xdiff,cursor[1],2,charh))
         return sf
     def get_extra(self):
+        if not self._got_surface:
+            self.get_surface()
         return {"TH":self.TH,"HTH":self.HTH,"TW":self.TW,"HTW":self.HTW}

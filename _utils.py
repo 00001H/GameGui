@@ -2,7 +2,7 @@
 from .mast import literal_eval as _le
 from pygame import locals as lc,Surface
 from pygame.font import match_font,Font,SysFont
-from collections import namedtuple as nt,deque
+from collections import namedtuple as nt
 def focused_in(x):return getattr(x,"focused_widget",None)
 def getdeffont():
     """Returns the default font."""
@@ -82,14 +82,14 @@ class SizedDict:
     def __init__(self,cap):
         self.cap = cap
         self.internal = {}
-        self.updated = deque()
+        self.updated = []
         self.full = False
     def _miss(self,item,value):
         if not self.full:
             if len(self.internal) == self.cap:
                 self.full = True
         if self.full:
-            del self.internal[self.updated.popleft()]
+            del self.internal[self.updated.pop(0)]
             self.internal[item] = value
         else:
             self.internal[item] = value
