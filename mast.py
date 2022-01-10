@@ -38,8 +38,8 @@ def literal_eval(node_or_string):
             return dict(zip(map(_convert, node.keys),
                             map(_convert, node.values)))
         elif isinstance(node, BinOp) and isinstance(node.op, (Add,Sub,Mult,Div,FloorDiv)):
-            left = _convert_signed_num(node.left)
-            right = _convert_num(node.right)
+            left = _convert(node.left)
+            right = _convert(node.right)
             if isinstance(left, (int, float)) and isinstance(right, (int, float, complex)):
                 if isinstance(node.op,Add):
                     return left + right

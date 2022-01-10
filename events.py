@@ -16,21 +16,26 @@ Removes events that are processed."""
         evtscpy = list(evts)
         for evt in evtscpy:#won't say list size changed during iteration then
             if evt.type == MOUSEBUTTONDOWN:
+                handle = True
                 for widg,pos in walk_nodes((0,0),self.w):
-                    if (widg.n is self.w) or widg.unfocusable():
+                    if (widg.n is self.w):
                         continue
                     rec = pygame.Rect(*getrect(widg,pos,widg.get_extra()),widg.width,
                                       widg.height)
                     if rec.collidepoint(evt.pos):
-                        self.w.focused_widget = widg
-            if self.w.focused_widget is not None:
-                current = self.w.focused_widget
-                while not current._handle_event(evt):#keep going parent if can't handle
-                    current = current.parent#move up a level
-                    if current.n is self.w:#no handler
-                        break
-                else:#loop-else triggers if not stopped with a break statement
-                    evts.remove(evt)#found handler;delete event
+                        if handle and widg._handle_event(evt):
+                            handle = False
+                        if not widg.unfocusable():
+                            self.w.focused_widget = widg
+            else:
+                if self.w.focused_widget is not None:
+                    current = self.w.focused_widget
+                    while not current._handle_event(evt):#keep going parent if can't handle
+                        current = current.parent#move up a level
+                        if current.n is self.w:#no handler
+                            break
+                    else:#loop-else triggers if not stopped with a break statement
+                        evts.remove(evt)#found handler;delete event
 def start_loop(win,callback,fps=60,no_quit=False,evm=None):
     """Starts the event loop.
 args:

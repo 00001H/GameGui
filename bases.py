@@ -33,7 +33,10 @@ to override the event handling behavior."""
     def handle_event(self,event):
         return False
     def _handle_event(self,event):
-        return getattr(self,"evh_override",self.handle_event)(self,event)
+        if hasattr(self,"evh_override"):
+            if self.evh_override(self,event):
+                return True
+        return self.handle_event(event)
     def unfocusable(self):
         return True
     def on_update(self,is_focused):

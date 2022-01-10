@@ -128,11 +128,11 @@ linespacing specifies the space between lines."""
                 for j in range(cotl):
                     leftie += cdc.get(self.font,line[j],self.aa).width
                 cursor = (leftie,ht)
-                charh = ln.get_rect().height
+                charh = ln.get_height()
             cotl -= len(line)+1
             lines.append((ln,ht))
-            ht += ln.get_rect().height+self.lsp
-        lh = ln.get_rect().height
+            ht += ln.get_height()+self.lsp
+        lh = ln.get_height()
         if charh==-1:
             charh = cdc.get(self.font,"|",self.aa).height
         if ssch and (ssch[-1].k is clrc):
@@ -140,12 +140,15 @@ linespacing specifies the space between lines."""
         if ht:
             ht -= self.lsp
         if (cursor is None) and self.cursor!=-1:
-            cursor = (ln.get_rect().width,ht-charh)
+            cursor = (ln.get_width(),ht-charh)
             whereisthecursor = lnc
+        wd = max((i[0].get_width() for i in lines))
         sf = self.blank()
         sf.fill(self.bgc)
         fles.TH = ht#modify the 'real self'
         fles.HTH = ht//2
+        fles.TW = wd
+        fles.HTW = wd//2
         xdiff = 0
         for i,(lnsf,y) in enumerate(lines):
             if self.align is LEFT:
@@ -167,4 +170,4 @@ linespacing specifies the space between lines."""
             sf.fill(self.color,(cursor[0]+xdiff,cursor[1],2,charh))
         return sf
     def get_extra(self):
-        return {"TH":self.TH,"HTH":self.HTH}
+        return {"TH":self.TH,"HTH":self.HTH,"TW":self.TW,"HTW":self.HTW}
