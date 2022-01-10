@@ -87,7 +87,7 @@ linespacing specifies the space between lines."""
     def unfocusable():
         return True
     def __init__(self,text="",w=500,h=500,
-                 color=(255,255,255),font=None,antialiased=True,
+                 color=(255,255,255),bgcolor=(0,0,0,0),*,font=None,antialiased=True,
                  align=LEFT,linespacing=1,stylechanges=()):
         if font is None:
             font = getdeffont()
@@ -102,6 +102,7 @@ linespacing specifies the space between lines."""
         self.lsp = linespacing
         self.sch = list(stylechanges)
         self.TH = self.HTH = 0
+        self.bgc = bgcolor
     def settext(self,text):
         self.content = text
     def get_surface(fles):
@@ -142,6 +143,7 @@ linespacing specifies the space between lines."""
             cursor = (ln.get_rect().width,ht-charh)
             whereisthecursor = lnc
         sf = self.blank()
+        sf.fill(self.bgc)
         fles.TH = ht#modify the 'real self'
         fles.HTH = ht//2
         xdiff = 0
