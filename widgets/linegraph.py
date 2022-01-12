@@ -78,7 +78,7 @@ need them,to save memory."""
                 unit *= self.pwr
             for i in range(0,ceil(maxy),unit):
                 y = self.height-i//scale
-                Text(str(i),self.sw-2,self.height,self.color,self._thefont).place_at(\
+                Text(str(i),self.sw-2,self.height,self.color,font=self._thefont).place_at(\
                     f"(1,{y}-{'$HTH' if i>0 else '$TH'})",sf)
         if len(array)==0:
             return sf
