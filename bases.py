@@ -65,11 +65,12 @@ class PcmtMgr(Widget,metaclass=ABCMeta):
     """Abstract class PcmtMgr.(Placement Manager).
 
 Must support add to add child widgets.
-Subclasses must either store child widgets(with NO EXTRA INFORMATION) in the _childs list
-(Note:may store extra information in other attributes),or override the childs property
-to return the list of childs).
-Must also support enumerate_childs to return an iterable of (child,position) tuples.
-It is used by the default get_surface implementation."""
+Subclasses must either store child widgets(with NO EXTRA INFORMATION) in the
+_childs list(Note:may store extra information in other attributes), or override
+the `childs` property to return the list of childs).
+Must also support enumerate_childs to return an iterable of (child,position)
+tuples. It is used by the default get_surface implementation and is assumed by a
+number of other functions."""
     @abstractmethod
     def add(self,child):
         raise NotImplementedError()
