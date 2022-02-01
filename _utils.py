@@ -4,6 +4,8 @@ from pygame import locals as lc,Surface
 from pygame.font import match_font,Font,SysFont
 from collections import namedtuple as nt
 def focused_in(x):return getattr(x,"focused_widget",None)
+class GameguiError(Exception):pass
+class UnhandleableEvent(GameguiError):pass
 def getdeffont():
     """Returns the default font."""
     return DEFFONT
@@ -11,6 +13,12 @@ def setdeffont(fnt):
     """Sets the default font to a new font."""
     global DEFFONT
     DEFFONT = fnt
+def set_handler_override(widget,func):
+    """Helper method. Sets the event-handling override for a widget.
+If the override function returns True, the event is treated as processed.
+If it returns False, event handling will fall back to widget behavior.
+If it raises UnhandleableEvent, the widget will fail to handle this event."""
+    widget.evh_override = func
 class _NodeWrapper:
     def __init__(self,node,par,dct=None):
         self.n = node

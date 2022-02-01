@@ -1,5 +1,5 @@
 """Defines abstract classes."""
-from ._utils import blank_of_size
+from ._utils import blank_of_size,UnhandleableEvent
 from .disp import winmgr
 from abc import *
 from pygame import Surface
@@ -24,7 +24,8 @@ unfocusable returns a boolean to indicate whether it is unfocusable by mouse cli
 not.
 
 User may assign a function evh_override that takes 2 arguments(self,event)
-to override the event handling behavior."""
+to override the event handling behavior.
+(Details see gamegui.set_handler_override)"""
     @abstractmethod
     def get_surface(self):
         raise NotImplementedError()
@@ -34,8 +35,11 @@ to override the event handling behavior."""
         return False
     def _handle_event(self,event):
         if hasattr(self,"evh_override"):
-            if self.evh_override(self,event):
-                return True
+            try:
+                if self.evh_override(self,event):
+                    return True
+            except UnhandleableEvent:
+                return False
         return self.handle_event(event)
     def unfocusable(self):
         return True

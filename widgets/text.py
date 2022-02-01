@@ -10,10 +10,12 @@ class StyleChange:
     """Style change.
 Avaliable kinds: StyleChange.AA    antialiasing change
                  StyleChange.LSP   line spacing change
-                 StyleChange.COLOR color change"""
+                 StyleChange.BG    background color change
+                 StyleChange.FG    foreground color change"""
     AA = object()
     LSP = object()
-    COLOR = object()
+    BG = object()
+    FG = object()
     def __init__(self,where,kind,new):
         self.where = where
         self.k = kind
@@ -26,9 +28,14 @@ Avaliable kinds: StyleChange.AA    antialiasing change
         return not (self<=other)
     def __ge__(self,other):
         return not (self<other)
+    def __str__(self):
+        return f"StyleChange(at={self.where},\
+kind={next(n for n,v in vars(self.__class__).items() if v is self.k)},\
+val={self.n})"
 aac = StyleChange.AA
 lspc = StyleChange.LSP
-clrc = StyleChange.COLOR
+fgc = StyleChange.FG
+bgc = StyleChange.BG
 atable = {
 }
 def render(it,t,sch,begini):
@@ -47,18 +54,23 @@ def render(it,t,sch,begini):
     tw = 0
     mh = 0
     for seg,info in segs:
-        sf = font.render(seg,it.aa,it.color)
+        p = []
+        if len(it.bkgc)<4 or it.bkgc[3]>0:
+            p.append(it.bkgc)
+        sf = font.render(seg,it.aa,it.color,*p)
         r = sf.get_rect()
         tw += r.width
         mh = max(mh,r.height)
         sfc.append((sf,r.width))
-        if info:
+        if info is not None:
             k = info.k
             if k is aac:
                 it.aa = info.n
             elif k is lspc:
                 it.lsp = info.n
-            elif k is clrc:
+            elif k is bgc:
+                it.bkgc = info.n
+            elif k is fgc:
                 it.color = info.n
             else:
                 raise ValueError(f"Unsupported text render style change type!")
@@ -87,8 +99,9 @@ linespacing specifies the space between lines."""
     def unfocusable():
         return True
     def __init__(self,text="",w=500,h=500,
-                 color=(255,255,255),bgcolor=(0,0,0,0),*,font=None,antialiased=True,
-                 align=LEFT,linespacing=1,stylechanges=()):
+                 color=(255,255,255),bgcolor=(0,0,0,0),*,font=None,
+                 antialiased=True,align=LEFT,linespacing=1,stylechanges=(),
+                 textbgcolor=(0,0,0,0)):
         if font is None:
             font = getdeffont()
         self.content = text
@@ -103,6 +116,7 @@ linespacing specifies the space between lines."""
         self.sch = list(stylechanges)
         self.TH = self.HTH = 0
         self.bgc = bgcolor
+        self.bkgc = textbgcolor
         self._got_surface = False
     def settext(self,text):
         self.content = text
@@ -137,7 +151,7 @@ linespacing specifies the space between lines."""
         lh = ln.get_height()
         if charh==-1:
             charh = cdc.get(self.font,"|",self.aa).height
-        if ssch and (ssch[-1].k is clrc):
+        if ssch and (ssch[-1].k is fgc):
             self.color = ssch[-1].n
         if ht:
             ht -= self.lsp
