@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 setup(
     name="gamegui",
-    version="1.3.0",
+    version="1.3.1",
     description="A widget-based pygame GUI Framework",
     long_description="""\
 This is a widget-based pygame GUI framework.
@@ -27,7 +27,7 @@ Any help/contributions are appreciated.""".replace("\n"," "),
         "Topic :: Software Development :: User Interfaces"
     ],
     packages=find_packages(where="."),
-    python_requires=">=3.8, <=3.10",
+    python_requires=">=3.8, <4",
     install_requires=["pygame","pyperclip"],
     project_urls={
         "Bug Reports":"https://github.com/00001H/GameGui/issues",

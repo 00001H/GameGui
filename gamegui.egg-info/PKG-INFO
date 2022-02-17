@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: gamegui
+Version: 1.3.1
+Summary: A widget-based pygame GUI Framework
+Home-page: https://github.com/00001H/GameGui
+Author: 00001H
+Author-email: Programmer00001H@gmail.com
+License: UNKNOWN
+Project-URL: Bug Reports, https://github.com/00001H/GameGui/issues
+Project-URL: Source Code, https://github.com/00001H/GameGui
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: User Interfaces
+Requires-Python: >=3.8, <4
+Description-Content-Type: text/plain
+License-File: LICENSE.txt
+
+This is a widget-based pygame GUI framework. Due to my limited time(this is a 1-person project), I can't write a tutorial to use this framework. However, you can visit the "demos" folder to learn how to use this framework.  If you want to contribute to this project, send me an email(at Programmer00001H@gmail.com).  Any help/contributions are appreciated.
+
